@@ -1,0 +1,33 @@
+{
+  "scripts": {
+    "test": "nyc --reporter=text mocha --inspect --recursive",
+    "coverage": "nyc report --reporter=text-lcov"
+  },
+  "main": "js/index.js",
+  "license": "MIT",
+  "name": "@pubcore/node-docker-build",
+  "version": "1.0.0",
+  "description": "Scripts to build and deploy pubcore compositions",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/pubcore/node-docker-build.git"
+  },
+  "author": "pubcore",
+  "bugs": {
+    "url": "https://github.com/pubcore/node-docker-build/issues"
+  },
+  "homepage": "https://github.com/pubcore/node-docker-build#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.14.1",
+    "eslint-plugin-mocha": "^5.3.0",
+    "mocha": "^6.0.1",
+    "nyc": "^13.3.0"
+  },
+  "dependencies": {
+    "throat": "^4.1.0"
+  }
+}
