@@ -4,8 +4,8 @@ const build = require('./lib/build'),
 
 console.time('build')
 console.log('BEGIN')
-
-var config = loadConfig(process.argv)
+var [,,moduleName, domain] = process.argv
+var config = loadConfig(moduleName, domain)
 if(!config){
 	process.exit()
 }
