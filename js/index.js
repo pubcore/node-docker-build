@@ -1,13 +1,15 @@
 'use strict'
 const {spawn} = require('child_process')
 
-const call = (script, pkgName, domain) => spawn(
-	`kill "$(pgrep -f 'node ${script} ${pkgName} ${domain}')" ; node ${script} ${pkgName} ${domain} >  ../${script}.log 2>&1`,
-	{cwd:__dirname, detach:true, stdio:'ignore', shell:true}
+const call = ({script, moduleName, domain, logPath, cwd}) => spawn(
+	`pgrep -f ".+${script} ${moduleName} ${domain}.+" | xargs kill ; \
+		node ${script} ${moduleName} ${domain} > ${logPath||'../'}${script}.log 2>&1`,
+	{cwd:cwd||__dirname, shell:true, detach:true, stdio:'ignore'}
 ).unref()
 
 module.exports = {
-	build: (pkgName, domain) => call('build', pkgName, domain),
-	deploy: (pkgName, domain) => call('deploy', pkgName, domain),
-	buildDeploy: (pkgName, domain) => call('build-deploy', pkgName, domain)
+	singletonExec: config => call({...config}),
+	build: config => call({script:'build', ...config}),
+	deploy: config => call({script:'deploy', ...config}),
+	buildDeploy: config => call({script:'build-deploy', ...config})
 }
