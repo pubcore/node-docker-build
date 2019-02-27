@@ -1,12 +1,12 @@
 const {spawn} = require('child_process'),
-	flatten = file => file.replace(/[\/\\]/g, '_'),
+	flatten = file => file.replace(/[\\/]/g, '_'),
 	path = require('path')
 
- //map data to shell commands ..
+//map data to shell commands ..
 const ssh = ({user, host, key}) =>
 		`ssh ${key ? '-i ' + key : ''} ${user}@${host}`,
 	remoteExec = ({host, jump, command}) =>
-		`${jump ? ssh(jump) + ' -t ' : ''}${ssh(host)} '${command}'`
+		`${jump ? ssh(jump) + ' -t ' : ''}${ssh(host)} '${command}'`,
 	uploadFile = ({file, host, jump}) => jump ?
 		`cat ${file} | ${ssh(jump)} "cat | ${ssh(host)} 'cat > ${flatten(file)}'"`
 		: `cat ${file} | ${ssh(host)} 'cat > ${flatten(file)}'`,
@@ -31,5 +31,5 @@ module.exports = ({baseDir, target, configs, repository, domain}) => new Promise
 		+ deploy({...target, configs}),
 		{cwd:path.resolve(baseDir, scope, name, domain), stdio:'inherit', shell:true}
 	).on('exit', code => (code===0 ? res() : rej(console.log('ERROR deploy'))))
-	.on('error', err => rej(err))
+		.on('error', err => rej(err))
 })
