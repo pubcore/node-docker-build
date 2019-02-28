@@ -5,7 +5,7 @@ const updatePackages = require('./updatePackages'),
 	path = require('path'),
 	cp = require('child_process'),
 	compose = (command, path) => process.env.DOCKER_HOST ?
-		`docker run --rm -v /var/run/:/var/run -v domains:/wd -i -w /wd/${path} docker/compose:1.23.2 ${command}`
+		`docker run --rm -v /var/run/:/var/run -v domains:/wd -i -a STDOUT -a STDERR -w /wd/${path} docker/compose:1.23.2 ${command}`
 		: `docker-compose ${command}`
 
 module.exports = config =>
