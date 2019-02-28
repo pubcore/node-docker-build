@@ -18,6 +18,6 @@ describe('build and deployment automation', () => {
 		singletonExec({cwd:__dirname, script, logPath:'./'})
 		return new Promise(res => setTimeout(() => {
 			res(execSync('pgrep -f "^[^ ]*node .+testScript.+"').toString().trim())
-		}, 25)).then(res => expect(res).to.match(/[0-9]+/))
+		}, 25)).then(res => expect(res).to.match(/^[0-9]+$/g))
 	})
 })
