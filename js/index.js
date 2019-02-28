@@ -3,13 +3,13 @@ const {spawn} = require('child_process'),
 	debug = require('debug')('node-docker-build')
 
 const call = ({script, moduleName, domain, logPath, cwd}) => {
-	var command =
-	`pgrep -f ".+${script} ${moduleName} ${domain}.+" | xargs kill > ${logPath||'../'}_kill.log 2>&1 ; \
-	node ${script} ${moduleName} ${domain} > ${logPath||'../'}_${script}.log 2>&1 &`
+	var killprocessIfExists =
+		`pgrep -f ".+${script} ${moduleName} ${domain}.+" | xargs kill > ${logPath||'../'}_kill.log 2>&1`,
+		startProcess = `node ${script} ${moduleName} ${domain} > ${logPath||'../'}_${script}.log 2>&1`,
+		command = `${killprocessIfExists} ; ${startProcess}`
 	debug(`spawn command: ${command}`)
 	return spawn(
-		command,
-		{cwd:cwd||__dirname, shell:true, detach:true, stdio:'ignore'}
+		command, {cwd:cwd||__dirname, shell:true, detach:true, stdio:'ignore'}
 	).unref()
 }
 
