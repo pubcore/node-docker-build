@@ -13,7 +13,14 @@ const call = ({script, moduleName, domain, logPath, cwd}) => {
 
 	debug(`spawn command: ${startProcess}`)
 	processList[script] = spawn(
-		startProcess, {cwd:cwd||__dirname, shell:true, detach:true, stdio:'ignore'}
+		startProcess,
+		{
+			cwd:cwd||__dirname,
+			shell:true,
+			detach:true,
+			stdio:'ignore',
+			env:{NODE_ENV:'development'}
+		}
 	)
 }
 
