@@ -19,7 +19,7 @@ const call = ({script, moduleName, domain, logPath, cwd}) => {
 			shell:true,
 			detach:true,
 			stdio:'ignore',
-			env:{NODE_ENV:'development'}
+			env:{...process.env, NODE_ENV:'development'}
 		}
 	)
 }
