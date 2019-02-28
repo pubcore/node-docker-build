@@ -4,8 +4,8 @@ const {spawn} = require('child_process'),
 
 const call = ({script, moduleName, domain, logPath, cwd}) => {
 	var command =
-	`pgrep -f ".+${script} ${moduleName} ${domain}.+" | xargs kill > ${logPath||'../'}${script}.log 2>&1 ; \
-	node ${script} ${moduleName} ${domain} > ${logPath||'../'}${script}.log 2>&1 &`
+	`pgrep -f ".+${script} ${moduleName} ${domain}.+" | xargs kill > ${logPath||'../'}_kill.log 2>&1 ; \
+	node ${script} ${moduleName} ${domain} > ${logPath||'../'}_${script}.log 2>&1 &`
 	debug(`spawn command: ${command}`)
 	return spawn(
 		command,

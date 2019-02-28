@@ -15,12 +15,13 @@ module.exports = ({dir, uri}) => new Promise((res, rej) => {
 					.on('exit', code => (code === 0 ? res('hasChanged') : rej())),
 				err => rej(console.log(err))
 			) || rej(err))
-		.stdout.on('data', data =>
-			data.toString().match(/up to date/) ?
+		.stdout.on('data', data => {
+			var output = data.toString()
+			output.match(/up to date/) ?
 				res(false)
-				: (data.toString().match(/Fast-forward/g) ?
+				: ( output.match(/Fast-forward/gi) ?
 					res('hasChanged')
-					: rej(console.log(`ERROR git pull failed for ${dir}`))
+					: rej(console.log(`ERROR git pull failed for ${dir}: ${output}`))
 				)
-		)
+		})
 })
