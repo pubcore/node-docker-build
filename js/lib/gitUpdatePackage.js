@@ -19,9 +19,9 @@ module.exports = ({dir, uri}) => new Promise((res, rej) => {
 			var output = data.toString()
 			output.match(/up to date/) ?
 				res(false)
-				: ( output.match(/Fast-forward/gi) ?
-					res('hasChanged')
-					: rej(console.log(`ERROR git pull failed for ${dir}: ${output}`))
+				: ( output.match(/error: /gi) ?
+					rej(console.log(`ERROR git pull for ${dir}: ${output}`))
+					: res('hasChanged')
 				)
 		})
 })
