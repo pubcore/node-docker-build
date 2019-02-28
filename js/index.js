@@ -1,11 +1,17 @@
 'use strict'
-const {spawn} = require('child_process')
+const {spawn} = require('child_process'),
+	debug = require('debug')('node-docker-build')
 
-const call = ({script, moduleName, domain, logPath, cwd}) => spawn(
+const call = ({script, moduleName, domain, logPath, cwd}) => {
+	var command =
 	`pgrep -f ".+${script} ${moduleName} ${domain}.+" | xargs kill ; \
-		node ${script} ${moduleName} ${domain} > ${logPath||'../'}${script}.log 2>&1`,
-	{cwd:cwd||__dirname, shell:true, detach:true, stdio:'ignore'}
-).unref()
+	node ${script} ${moduleName} ${domain} > ${logPath||'../'}${script}.log 2>&1`
+	debug(`spawn command: ${command}`)
+	return spawn(
+		command,
+		{cwd:cwd||__dirname, shell:true, detach:true, stdio:'ignore'}
+	).unref()
+}
 
 module.exports = {
 	singletonExec: config => call({...config}),
