@@ -8,10 +8,12 @@ module.exports = ({domain, compositions, masterPackages, baseDir, repository}) =
 		var {scope, name} = repository,
 			compositionDir = resolve(baseDir, scope, name, domain, composition),
 			nodeModulesDir = resolve(compositionDir, 'node_modules')
-
-		Object.keys(masterPackages).forEach(scope => {
-			execSync(`rm -f ${resolve(nodeModulesDir, '@'+scope)}`)
+		console.log(`BEGIN installing composition ${composition} in ${compositionDir}`)
+		Object.keys(masterPackages||{}).length ?
 			execSync('npm i --progress=false --loglevel=error', {cwd:compositionDir})
-			execSync(`ln -s ../../_dev/${scope} @${scope}`, {cwd:nodeModulesDir})
-		})
+			: Object.keys(masterPackages).forEach(scope => {
+				execSync(`rm -f ${resolve(nodeModulesDir, '@'+scope)}`)
+				execSync('npm i --progress=false --loglevel=error', {cwd:compositionDir})
+				execSync(`ln -s ../../_dev/${scope} @${scope}`, {cwd:nodeModulesDir})
+			})
 	})

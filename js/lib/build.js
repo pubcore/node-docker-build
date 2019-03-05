@@ -10,7 +10,8 @@ const updatePackages = require('./updatePackages'),
 
 module.exports = config =>
 	updateBase(config).then(() =>
-		updateMasterPackages(config), err => Promise.reject(err)).then(() =>
+		Object.keys(config.masterPackages||{}).length
+			&& updateMasterPackages(config), err => Promise.reject(err)).then(() =>
 		updatePackages(config), err => Promise.reject(err)).then(() => {
 		var {scope, name} = config.repository,
 			subPath = `${scope}/${name}/${config.domain}`,
