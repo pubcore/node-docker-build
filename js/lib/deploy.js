@@ -4,7 +4,7 @@ const {spawn} = require('child_process'),
 
 //map data to shell commands ..
 const ssh = ({user, host, key}) =>
-		`ssh ${key ? '-i ' + key : ''} ${user}@${host}`,
+		`ssh -tt ${key ? '-i ' + key : ''} ${user}@${host}`,
 	remoteExec = ({host, jump, command}) =>
 		`${jump ? ssh(jump) + ' -t ' : ''}${ssh(host)} '${command}'`,
 	uploadFile = ({file, host, jump}) => jump ?
