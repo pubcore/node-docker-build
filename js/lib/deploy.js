@@ -6,7 +6,7 @@ const {spawn} = require('child_process'),
 const ssh = ({user, host, key}) =>
 		`ssh ${key ? '-i ' + key : ''} ${user}@${host}`,
 	remoteExec = ({host, jump, command}) =>
-		`${jump ? ssh(jump) : ''}${ssh(host)} '${command}'`,
+		`${jump ? ssh(jump) + ' ' : ''}${ssh(host)} '${command}'`,
 	uploadFile = ({file, host, jump}) => jump ?
 		`cat ${file} | ${ssh(jump)} "cat | ${ssh(host)} 'cat > ${flatten(file)}'"`
 		: `cat ${file} | ${ssh(host)} 'cat > ${flatten(file)}'`,

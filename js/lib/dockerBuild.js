@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path'),
 	compose = (command, path) => process.env.DOCKER_HOST ?
-		`docker run --rm -v /var/run/:/var/run -v domains:/wd -i -w /wd/${path} docker/compose:1.23.2 ${command}`
+		`docker run --rm -v /var/run/:/var/run -v domains:/wd -w /wd/${path} docker/compose:1.23.2 ${command} >> ../_build-deploy.log 2>&1`
 		: `docker-compose ${command}`,
 	cp = require('child_process')
 
