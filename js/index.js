@@ -5,7 +5,7 @@ const {spawn} = require('child_process'),
 
 const call = ({script, moduleName, domain, logPath, cwd}) => {
 	var startProcess =
-		`node ${script} ${moduleName} ${domain} > ${logPath||'../'}_${script}.log 2>&1`
+		`node ${script} ${moduleName} ${domain||''} > ${logPath||'../'}_${script}.log 2>&1`
 
 	if(processList[script]){
 		processList[script].kill('SIGKILL')
