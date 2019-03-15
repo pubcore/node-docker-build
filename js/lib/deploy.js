@@ -20,16 +20,17 @@ const ssh = ({user, host, key}) =>
 		`docker stack deploy --prune --with-registry-auth ${composeFiles} ${stackName}`
 
 module.exports = ({baseDir, target, configs, repository, domain}) => new Promise((res, rej) => {
-	var {scope, name} = repository
-	spawn(
-		Object.keys(configs||{}).reduce((acc, name) =>
+	var {scope, name} = repository,
+		command = Object.keys(configs||{}).reduce((acc, name) =>
 			acc += uploadFile({file:configs[name], ...target}) + ' && '
 				+ deployConfig({...target, name, file:configs[name]}) + ' ; '
-		, '') +
-		uploadFile({file:'docker-compose.yml', ...target}) + ' && '
+		, '') + uploadFile({file:'docker-compose.yml', ...target}) + ' && '
 		+ uploadFile({file:'docker-compose-deploy.yml', ...target}) + ' && '
 		+ deploy({...target, configs}),
-		{cwd:path.resolve(baseDir, scope, name, domain), stdio:'inherit', shell:true}
-	).on('exit', code => (code===0 ? res() : rej(console.log('ERROR deploy'))))
+		cwd = path.resolve(baseDir, scope, name, domain)
+	console.log('working dir: ' + cwd)
+	console.log(command)
+	spawn( command, {cwd, stdio:'inherit', shell:true})
+		.on('exit', code => (code===0 ? res() : rej(console.log('ERROR deploy'))))
 		.on('error', err => rej(err))
 })
