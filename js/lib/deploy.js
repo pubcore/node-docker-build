@@ -8,14 +8,14 @@ const ssh = ({user, host, key}) =>
 	remoteExec = ({host, jump, command}) =>
 		`${jump ? ssh(jump) + ' ' : ''}${ssh(host)} '${command}'`,
 	uploadFile = ({file, host, jump}) => jump ?
-		`cat ${file} | ${ssh(jump)} "cat | ${ssh(host)} 'cat > ${flatten(file)}'"`
-		: `cat ${file} | ${ssh(host)} 'cat > ${flatten(file)}'`,
+		`cat ${file} | ${ssh(jump)} "cat | ${ssh(host)} 'cat > /tmp/${flatten(file)}'"`
+		: `cat ${file} | ${ssh(host)} 'cat > /tmp/${flatten(file)}'`,
 	deploy = ({host, jump, stackName}) =>
 		remoteExec({host, jump, command:dockerStackDeploy({stackName})}),
 	deployConfig = ({host, jump, name, file}) => remoteExec({
-		host, jump, command:`docker config create ${name} ${flatten(file)}`
+		host, jump, command:`docker config create ${name} /tmp/${flatten(file)}`
 	}),
-	composeFiles = '-c docker-compose.yml -c docker-compose-deploy.yml',
+	composeFiles = '-c /tmp/docker-compose.yml -c /tmp/docker-compose-deploy.yml',
 	dockerStackDeploy = ({stackName}) =>
 		`docker stack deploy --prune --with-registry-auth ${composeFiles} ${stackName}`
 
