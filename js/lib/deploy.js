@@ -5,15 +5,15 @@ const {spawn} = require('child_process'),
 //map data to shell commands ..
 const ssh = ({user, host, key}) =>
 		`ssh ${key ? '-i ' + key : ''} ${user}@${host}`,
-	remoteExec = ({host, jump, command}) =>
-		`${jump ? ssh(jump) + ' ' : ''}${ssh(host)} '${command}'`,
+	remoteExec = ({host, jump, command, sudo}) =>
+		`${jump ? ssh(jump) + ' ' : ''}${ssh(host)} '${sudo?'sudo':''} ${command}'`,
 	uploadFile = ({file, host, jump}) => jump ?
 		`cat ${file} | ${ssh(jump)} "cat | ${ssh(host)} 'cat > /tmp/${flatten(file)}'"`
 		: `cat ${file} | ${ssh(host)} 'cat > /tmp/${flatten(file)}'`,
-	deploy = ({host, jump, stackName}) =>
-		remoteExec({host, jump, command:dockerStackDeploy({stackName})}),
-	deployConfig = ({host, jump, name, file}) => remoteExec({
-		host, jump, command:`docker config create ${name} /tmp/${flatten(file)}`
+	deploy = ({host, jump, stackName, sudo}) =>
+		remoteExec({host, jump, sudo, command:dockerStackDeploy({stackName})}),
+	deployConfig = ({name, file, ...rest}) => remoteExec({
+		...rest, command:`docker config create ${name} /tmp/${flatten(file)}`
 	}),
 	composeFiles = '-c /tmp/docker-compose.yml -c /tmp/docker-compose-deploy.yml',
 	dockerStackDeploy = ({stackName}) =>
