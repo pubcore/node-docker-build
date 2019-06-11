@@ -29,7 +29,7 @@ module.exports = {
 		stackName: 'example',
 		sudo:false //optional, prepend "sudo", if required for docker commands
 	},
-	configs:{
+	configs:{ //optional, will be transfered to create docker config
 		'verdaccio-conf-v2':'verdaccio/conf/config.yaml'
 	}
 }
