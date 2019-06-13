@@ -20,6 +20,6 @@ describe('domain-config module loader', () => {
 		deepEqual(loader('../test/config.js').domain, 'test')
 	})
 	it('sets "basePath" based on convention', () => {
-		ok(existsSync(loader('../test/config.js').basePath))
+		ok(existsSync(loader('../test/config.js').baseDir))
 	})
 })

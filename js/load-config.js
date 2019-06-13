@@ -13,8 +13,8 @@ module.exports = (domainModule, domain) => {
 	//TODO create schema and validate
 
 	if(config){
-		//determine basePath of local (cloned) packages
-		config.basePath = resolve(domainModule, '../../../')
+		//determine base directory of local (cloned) packages
+		config.baseDir = resolve(domainModule, '../../../')
 		//convention: dir-name equals domain-name e.g. example.com
 		config.domain = basename(resolve(domainModule, '../'))
 	}

@@ -43,4 +43,4 @@ module.exports = {
 	  ✓ loads config module and returns config of given domain
 	  ✓ validates config module string (path to config.js package)
 		✓ sets "domain" based on convention ()
-		✓ sets "basePath" based on convention
+		✓ sets "baseDir" based on convention
