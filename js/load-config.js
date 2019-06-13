@@ -14,7 +14,7 @@ module.exports = (domainModule, domain) => {
 
 	if(config){
 		//determine base directory of local (cloned) packages
-		config.baseDir = resolve(domainModule, '../../../')
+		config.baseDir = resolve(domainModule, '../../../../')
 		//convention: dir-name equals domain-name e.g. example.com
 		config.domain = basename(resolve(domainModule, '../'))
 	}
