@@ -1,4 +1,5 @@
 'use strict'
+const {resolve, basename} = require('path')
 
 module.exports = (domainModule, domain) => {
 	if(domainModule.match(/[^a-zA-Z0-9:_.@/\\-]/)){
@@ -11,5 +12,12 @@ module.exports = (domainModule, domain) => {
 	var config = require(domainModule)
 	//TODO create schema and validate
 
-	return domain ? config[domain] : config
+	if(config){
+		//determine basePath of local (cloned) packages
+		config.basePath = resolve(domainModule, '../../../')
+		//convention: dir-name equals domain-name e.g. example.com
+		config.domain = basename(resolve(domainModule, '../'))
+	}
+
+	return (domain ? config[domain] : config)
 }

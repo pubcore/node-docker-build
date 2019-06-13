@@ -2,15 +2,13 @@
 
 #### Prerequisites
 * latest docker installed (deamon is running)
-* ssh access (optional over jump host) to remote manager host
+* ssh access (optional over jump host) to remote manager host or local vm
 
-#### Configuration example (config.js)
+#### Configuration example: domain-config module (config.js)
 ```
 'use strict'
 
 module.exports = {
-	baseDir: '/dev',
-	domain: 'example.com',
 	compositions:['test'], //compostions of subdomains e.g. test.example.com
 	repository: {  //this repository contains the "domain" folder
 		user:'git', domain:'github.com', scope:'your-scope', name:'compositions'
@@ -44,5 +42,5 @@ module.exports = {
 	domain-config module loader
 	  ✓ loads config module and returns config of given domain
 	  ✓ validates config module string (path to config.js package)
-	  ✓ validates domain string
-	  ✓ returns module, if domain is not given
+		✓ sets "domain" based on convention ()
+		✓ sets "basePath" based on convention
