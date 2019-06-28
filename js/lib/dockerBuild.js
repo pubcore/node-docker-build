@@ -4,6 +4,10 @@ const path = require('path'),
 	cp = require('child_process')
 
 module.exports = config => new Promise((res, rej) => {
+	if(config.domain === 'host.docker.internal' ){
+		return res(console.log('skip docker build, not required on local system'))
+	}
+	
 	var {scope, name, domainDir} = config.repository,
 		{home} = config.target,
 		subPath = `${scope}/${name}/${domainDir}/${config.domain}`,

@@ -25,6 +25,6 @@ describe('domain-config module loader', () => {
 		ok(existsSync(loader(config).baseDir))
 	})
 	it('sets "repository.domainDir" based on location of domain folders', () => {
-		equal(loader(config).repository.domainDir, 'test')
+		equal(loader(config).repository.domainDir, '')
 	})
 })
