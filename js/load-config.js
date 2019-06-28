@@ -1,5 +1,6 @@
 'use strict'
-const {resolve, basename} = require('path')
+const {resolve, basename, dirname} = require('path'),
+	findPackageJson = require('find-package-json')
 
 module.exports = (domainModule, domain) => {
 	if(domainModule.match(/[^a-zA-Z0-9:_.@/\\-]/)){
@@ -13,10 +14,15 @@ module.exports = (domainModule, domain) => {
 	//TODO create schema and validate
 
 	if(config){
-		//determine base directory of local (cloned) packages
-		config.baseDir = resolve(domainModule, '../../../../')
+		var packageFile = findPackageJson(domainModule).next().filename
 		//convention: dir-name equals domain-name e.g. example.com
 		config.domain = basename(resolve(domainModule, '../'))
+		//determine base directory of local (cloned) packages
+		config.baseDir = resolve(packageFile, '../../../')
+		if(config.repository || (config.repository = {})){
+			config.repository.domainDir =
+				resolve(domainModule, '../').replace(dirname(packageFile), '').replace(/^\//, '')
+		}
 	}
 
 	return (domain ? config[domain] : config)

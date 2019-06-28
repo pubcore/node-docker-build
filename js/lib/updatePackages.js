@@ -5,8 +5,8 @@ const {resolve} = require('path'),
 //update packages which are not part of own scopes
 module.exports = ({domain, compositions, masterPackages, baseDir, repository}) =>
 	compositions.forEach(composition => {
-		var {scope, name} = repository,
-			compositionDir = resolve(baseDir, scope, name, domain, composition),
+		var {scope, name, domainDir} = repository,
+			compositionDir = resolve(baseDir, scope, name, domainDir||'', domain, composition),
 			nodeModulesDir = resolve(compositionDir, 'node_modules')
 
 		if(Object.keys(masterPackages||{}).length){

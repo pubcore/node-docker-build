@@ -4,9 +4,9 @@ const path = require('path'),
 	cp = require('child_process')
 
 module.exports = config => new Promise((res, rej) => {
-	var {scope, name} = config.repository,
+	var {scope, name, domainDir} = config.repository,
 		{home} = config.target,
-		subPath = `${scope}/${name}/${config.domain}`,
+		subPath = `${scope}/${name}/${domainDir}/${config.domain}`,
 		dir = path.resolve(config.baseDir, subPath),
 		compose = cmd => DOCKER_HOST ?
 			`docker run --rm -v /var/run/:/var/run -v ${home}:${home} -v ${home}:/root -v domains:/wd -w /wd/${subPath} docker/compose:1.23.2 ${cmd}`
