@@ -16,7 +16,6 @@ module.exports = config => new Promise((res, rej) => {
 		pushCommand = push ? ` && ${compose('push')}` : '',
 		command = `${compose('build')}${buildArgs ? buildArg(buildArgs):''}${pushCommand}`
 
-	console.log(command)
 	cp.spawn( command, {cwd:dir, stdio:'inherit', shell:true} )
 		.on('exit', code => code === 0 ? res() : rej())
 		.on('error', err => rej(err))
