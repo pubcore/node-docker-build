@@ -27,4 +27,7 @@ describe('domain-config module loader', () => {
 	it('sets "repository.domainDir" based on location of domain folders', () => {
 		equal(loader(config).repository.domainDir, '')
 	})
+	it('sets "push" to true as default', () => {
+		equal(loader(config).push, true)
+	})
 })

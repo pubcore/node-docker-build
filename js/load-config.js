@@ -23,6 +23,9 @@ module.exports = (domainModule, domain) => {
 			config.repository.domainDir =
 				resolve(domainModule, '../../').replace(dirname(packageFile), '').replace(/^\//, '')
 		}
+		if(config.push === undefined){
+			config.push = true
+		}
 	}
 
 	return (domain ? config[domain] : config)
