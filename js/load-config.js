@@ -1,6 +1,7 @@
 'use strict'
 const {resolve, basename, dirname} = require('path'),
-	findPackageJson = require('find-package-json')
+	findPackageJson = require('find-package-json'),
+	{homedir} = require('os')
 
 module.exports = (domainModule, domain) => {
 	if(domainModule.match(/[^a-zA-Z0-9:_.@/\\-]/)){
@@ -25,6 +26,9 @@ module.exports = (domainModule, domain) => {
 		}
 		if(config.push === undefined){
 			config.push = true
+		}
+		if(!config.target){
+			config.target = {home:homedir()}
 		}
 	}
 
