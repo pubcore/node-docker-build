@@ -9,7 +9,8 @@ module.exports = ({domain, masterPackages, baseDir, repository}) => Promise.all(
 		masterPackages[scope].packages.forEach(name => {
 			acc.push( throat(() => updateMasterPackage({
 				baseDir: path.resolve(
-					baseDir, repository.scope, repository.name, domain, '_dev'
+					baseDir, repository.scope, repository.name, repository.domainDir||'',
+					domain, '_dev'
 				),
 				...masterPackages[scope], scope, name
 			})))
