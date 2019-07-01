@@ -13,7 +13,7 @@ module.exports = config => new Promise((res, rej) => {
 		compose = cmd => DOCKER_HOST ?
 			`docker run --rm -v /var/run/:/var/run -v ${home}:${home} -v ${home}:/root -v domains:/wd -w /wd/${subPath} docker/compose:1.23.2 ${cmd}`
 			: `docker-compose ${cmd}`,
-		pushCommand = push ? ` && ${compose('push')}` : '',
+		pushCommand = push ? ` && ${compose('push')} --ignore-push-failures ` : '',
 		command = `${compose('build')}${buildArgs ? buildArg(buildArgs):''}${pushCommand}`
 
 	cp.spawn( command, {cwd:dir, stdio:'inherit', shell:true} )
