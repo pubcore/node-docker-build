@@ -1,0 +1,1 @@
+simulate an repository base dir without any .git folder
