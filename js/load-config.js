@@ -10,12 +10,12 @@ module.exports = (domainModule, domain) => {
 	if(domain && domain.match(/[^a-z0-9_.-]/)){
 		throw TypeError('illegal characters found in domain')
 	}
-
+	
 	var config = require(domainModule)
+	var packageFile = findPackageJson(domainModule).next().filename
 	//TODO create schema and validate
 
-	if(config){
-		var packageFile = findPackageJson(domainModule).next().filename
+	if(config && packageFile){
 		//convention: dir-name equals domain-name e.g. example.com
 		config.domain = basename(resolve(domainModule, '../'))
 		//determine base directory of local (cloned) packages
