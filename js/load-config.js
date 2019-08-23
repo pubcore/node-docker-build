@@ -10,7 +10,7 @@ module.exports = (domainModule, domain) => {
 	if(domain && domain.match(/[^a-z0-9_.-]/)){
 		throw TypeError('illegal characters found in domain')
 	}
-	
+
 	var config = require(domainModule)
 	var packageFile = findPackageJson(domainModule).next().filename
 	//TODO create schema and validate
@@ -22,7 +22,7 @@ module.exports = (domainModule, domain) => {
 		config.baseDir = resolve(packageFile, '../../../')
 		if(config.repository || (config.repository = {})){
 			config.repository.domainDir =
-				resolve(domainModule, '../../').replace(dirname(packageFile), '').replace(/^\//, '')
+				resolve(domainModule, '../../').replace(dirname(packageFile), '').replace(/^[/\\]/, '')
 		}
 		if(config.push === undefined){
 			config.push = true

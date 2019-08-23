@@ -2,7 +2,8 @@
 const path = require('path'),
 	{DOCKER_HOST} =  process.env,
 	cp = require('child_process'),
-	buildArg = require('./buildArgs')
+	buildArg = require('./buildArgs'),
+	{platform} = require('os')
 
 module.exports = config => new Promise((res, rej) => {
 	var {repository, domain, target, buildArgs, push, buildCache} = config,
@@ -17,8 +18,10 @@ module.exports = config => new Promise((res, rej) => {
 		) + ` ${args} ${cmd} ${(cmd==='build' && buildArgs) ? buildArg(buildArgs):''}`,
 		buildCacheCommand = buildCache ? `${compose('build', '-f docker-compose-build-cache.yml')} && ` : '',
 		pushCommand = push ? ` && ${compose('push')} --ignore-push-failures ` : '',
-		command = `${buildCacheCommand}${compose('build')}${pushCommand}`
+		exe = platform() === 'win32' ? 'PowerShell.exe ' : '',
+		command = `${exe}${buildCacheCommand}${compose('build')}${pushCommand}`
 
+	console.log(command)
 	cp.spawn( command, {cwd:dir, stdio:'inherit', shell:true} )
 		.on('exit', code => code === 0 ? res() : rej())
 		.on('error', err => rej(err))
