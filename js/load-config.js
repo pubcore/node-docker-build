@@ -30,6 +30,9 @@ module.exports = (domainModule, domain) => {
 		if(!config.target){
 			config.target = {home:homedir()}
 		}
+		if(config.detach === undefined){
+			config.detach = true
+		}
 	}
 
 	return (domain ? config[domain] : config)

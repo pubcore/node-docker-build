@@ -1,0 +1,8 @@
+FROM node:10.15.1-alpine
+ARG COMPOSITION
+ENV NODE_ENV=production
+USER node:1000
+RUN mkdir /home/node/app
+WORKDIR /home/node/app
+COPY $COMPOSITION/ .
+CMD ["node", "server.js"]

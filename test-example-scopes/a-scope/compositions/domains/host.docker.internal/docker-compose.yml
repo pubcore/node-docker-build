@@ -1,0 +1,5 @@
+version: "3.7"
+
+services:
+  js:
+    image: dummy-js-local:latest

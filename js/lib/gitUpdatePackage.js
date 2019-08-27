@@ -9,19 +9,27 @@ module.exports = ({dir, uri}) => new Promise((res, rej) => {
 	var scopeDir = path.resolve(dir, '..'),
 		create = () => {
 			spawn('git', ['clone', uri], {cwd:scopeDir})
-				.on('error', err => rej(err))
-				.on('exit', code => (code === 0 ? res('hasChanged') : rej({code})))
+				.on('exit', val => val === 0 ? res('hasChanged') : rej(new Error(val)))
 		},
 		update = () => {
-			var cp = spawn('git', [`--git-dir=${dir}/.git`, 'pull'], {cwd:dir})
-			cp.stdout.on('data', data => {
+			var process = spawn('git', [`--git-dir=${dir}/.git`, 'pull'], {cwd:dir})
+			process.stdout.on('data', data => {
 				var output = data.toString()
-				output.match(/up to date/) ?
-					res(false)
-					: ( output.match(/error: /gi) ? rej(output) : res('hasChanged') )
+				if(output.match(/up to date/gi)) res(false)
+				res('hasChanged')
 			})
-			cp.stderr.on('data', () => create())
-			cp.on('error', err => err.code === 'ENOENT' ? create() : rej(err))
+			process.stderr.on('data', data => {
+				var output = data.toString()
+				//git creates output to stderr, despite of all is ok.
+				//So only throw error for some cases
+				if(output.match(/^fatal: /)) rej(new Error(output))
+			})
+			process.on('error', err => {
+				err.code === 'ENOENT' && create()
+			})
+			//allways resolve this promise (ignored if there was a resolve before)
+			process.on('exit', code => res(code))
 		}
-	mkdir(scopeDir, {recursive:true}).then(() => update(), err => rej(err))
+
+	mkdir(scopeDir, {recursive:true}).then(() => update(), err => rej(new Error(err)))
 })

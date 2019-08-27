@@ -9,7 +9,6 @@ var config = loadConfig(moduleName, domain)
 if(!config){
 	process.exit()
 }
-
 build(config).then(() =>
 	console.timeEnd('build'), err => console.log(err)
 )

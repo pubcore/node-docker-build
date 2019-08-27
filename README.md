@@ -1,8 +1,10 @@
 ## functions to build and deploy to a docker swarm, based on configuration
 
 #### Prerequisites
-* latest docker installed (deamon is running)
-* ssh access (optional over jump host) to remote manager host or local vm
+* latest docker installed (deamon is running and docker-compose does work)
+* latest nodejs/npm installed
+* git client installed
+* ssh access (optional over jump host) to deployment target, docker manager host
 
 #### Configuration example: domain-config module (config.js)
 ```
@@ -29,7 +31,9 @@ module.exports = {
 	},
 	configs:{ //optional, will be transfered to create docker config
 		'verdaccio-conf-v2':'verdaccio/conf/config.yaml'
-	}
+	},
+	detach: true //optional, if false std-out/-err is piped to current shell,
+	push: true //ptional, if false no docker-compose push will be executed
 }
 ```
 

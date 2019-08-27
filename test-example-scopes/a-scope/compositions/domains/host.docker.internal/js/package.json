@@ -1,0 +1,18 @@
+{
+    "name": "@a-scope/compositions",
+    "version": "1.0.0",
+    "description": "composition for local development",
+    "main": "server.js",
+    "dependencies": {
+			"dummy-package":"file:./dummy-package"
+		},
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "pubcore",
+    "license": "MIT",
+    "engines": {
+        "docker": ">=18.06.0"
+    }
+}

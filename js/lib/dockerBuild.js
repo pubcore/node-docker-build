@@ -8,7 +8,7 @@ const path = require('path'),
 module.exports = config => new Promise((res, rej) => {
 	var {repository, domain, target, buildArgs, push, buildCache} = config,
 		{scope, name, domainDir} = repository,
-		{home} = target,
+		{home} = target || {},
 		subPath = `${scope}/${name}/${domainDir}/${domain}`,
 		dir = path.resolve(config.baseDir, subPath),
 		compose = (cmd, args='') => (
@@ -18,11 +18,11 @@ module.exports = config => new Promise((res, rej) => {
 		) + ` ${args} ${cmd} ${(cmd==='build' && buildArgs) ? buildArg(buildArgs):''}`,
 		buildCacheCommand = buildCache ? `${compose('build', '-f docker-compose-build-cache.yml')} && ` : '',
 		pushCommand = push ? ` && ${compose('push')} --ignore-push-failures ` : '',
-		exe = platform() === 'win32' ? 'PowerShell.exe ' : '',
+		exe = platform() === 'win32' ? 'PowerShell.exe -NonInteractive -Command ' : '',
 		command = `${exe}${buildCacheCommand}${compose('build')}${pushCommand}`
 
 	console.log(command)
 	cp.spawn( command, {cwd:dir, stdio:'inherit', shell:true} )
-		.on('exit', code => code === 0 ? res() : rej())
-		.on('error', err => rej(err))
+		.on('exit', code => code === 0 ? res() : rej(new Error({code})))
+		.on('error', err => rej(new Error(err)))
 })

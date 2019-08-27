@@ -1,0 +1,15 @@
+version: "3.7"
+x-build-args: &build-args-default
+  GIT_HOSTS: github.com
+  REGISTRY: ""
+  ENV_TYPE: local
+x-js-build: &js-build-defaults
+  context: .
+  dockerfile: ../../Dockerfile-js-dev
+
+services:
+  js:
+    build:
+      <<: *js-build-defaults
+      args:
+        COMPOSITION: "js"

@@ -20,4 +20,7 @@ describe('build and deployment automation', () => {
 			res(execSync('pgrep -f "^[^ ]*node .+testScript.+"').toString().trim())
 		}, 25)).then(res => expect(res).to.match(/^[0-9]+$/g))
 	})
+	it('supports "detach" boolean to enable synchronous build', () =>
+		build({cwd:__dirname, script:script2, logPath:'./', detach:false})
+	)
 })

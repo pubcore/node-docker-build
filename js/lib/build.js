@@ -4,9 +4,10 @@ const updatePackages = require('./updatePackages'),
 	updateBase = require('./updateBase'),
 	dockerBuild = require('./dockerBuild')
 
-module.exports = config =>
-	updateBase(config).then(() =>
-		Object.keys(config.masterPackages||{}).length
-			&& updateMasterPackages(config), err => Promise.reject(err)).then(() =>
-		updatePackages(config), err => Promise.reject(err)).then(() =>
-		dockerBuild(config), err => Promise.reject(err))
+module.exports = async config => {
+	await updateBase(config)
+	Object.keys(config.masterPackages||{}).length &&
+		await updateMasterPackages(config)
+	await updatePackages(config)
+	await dockerBuild(config)
+}

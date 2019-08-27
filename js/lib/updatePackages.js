@@ -4,12 +4,12 @@ const {resolve} = require('path'),
 	{platform} = require('os')
 
 //update packages which are not part of own scopes
-module.exports = ({domain, compositions, masterPackages, baseDir, repository}) =>
+module.exports = ({domain, compositions, masterPackages, baseDir, repository}) => new Promise( res =>
 	compositions.forEach(composition => {
 		var {scope, name, domainDir} = repository,
 			compositionDir = resolve(baseDir, scope, name, domainDir||'', domain, composition),
 			nodeModulesDir = resolve(compositionDir, 'node_modules')
-
+		console.log(`START install composition "${composition}" in ${compositionDir}`)
 		if(Object.keys(masterPackages||{}).length){
 			Object.keys(masterPackages).forEach(scope => {
 				execSync(`rm -f ${resolve(nodeModulesDir, '@'+scope)}`)
@@ -21,5 +21,5 @@ module.exports = ({domain, compositions, masterPackages, baseDir, repository}) =
 		}else{
 			execSync('npm i --progress=false --loglevel=error', {cwd:compositionDir})
 		}
-		console.log(`DONE install composition "${composition}" in ${compositionDir}`)
-	})
+		res(console.log(`DONE install composition "${composition}" in ${compositionDir}`))
+	}))
