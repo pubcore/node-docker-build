@@ -4,8 +4,8 @@ const {spawn} = require('child_process'),
 	processList = {}
 
 const call = args => {
-	var {script, moduleName, domain, logPath, cwd, detach} = args,
-		startProcess = `node ${script} ${moduleName} ${domain} > ${logPath}_${script}.log 2>&1`
+	var {script, moduleName, logPath, cwd, detach} = args,
+		startProcess = `node ${script} ${moduleName} > ${logPath}_${script}.log 2>&1`
 
 	if(detach === false){
 		return callSync(args)
@@ -19,7 +19,7 @@ const call = args => {
 	processList[script] = spawn(
 		startProcess,
 		{
-			cwd,
+			cwd:cwd||__dirname,
 			shell:true,
 			detach:true,
 			stdio:'ignore',
@@ -28,13 +28,13 @@ const call = args => {
 	)
 }
 
-const callSync = ({script, moduleName, domain, cwd}) => {
-	var startProcess = `node ${script} ${moduleName} ${domain||''}`
+const callSync = ({script, moduleName, cwd}) => {
+	var startProcess = `node ${script} ${moduleName}`
 	debug(`spawn command: ${startProcess}`)
 	spawn(
 		startProcess,
 		{
-			cwd,
+			cwd:cwd||__dirname,
 			shell:true,
 			stdio:'inherit',
 			env:{...process.env, NODE_ENV:'development'}
