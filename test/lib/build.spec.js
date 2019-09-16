@@ -5,21 +5,18 @@ const build = require('../../js/lib/build'),
 	exampleScopeDir = join(__dirname, '..', '..', 'test-example-scopes', 'a-scope'),
 	compositionsRepo = createTestRepo({files:join(exampleScopeDir, 'compositions')}),
 	componentRepo = createTestRepo({files:join(exampleScopeDir, 'example-component')}),
-	baseDir = join(__dirname, 'test-repos'),
+	baseDir = join(__dirname, 'test-repos', 'a-scope'),
+	domain = 'host.docker.internal',
+	workingDir = join(baseDir, compositionsRepo.name, 'domains', domain),
 	minConfig = {
-		repository:{
-			name:compositionsRepo.name,
-			uri:compositionsRepo.uri,
-			scope:'a-scope',
-			domainDir:'domains'
-		},
-		baseDir,
+		workingDir,
 		compositions:['js'],
 		domain:'host.docker.internal',
 		masterPackages:{'a-scope':{packages:[{uri:componentRepo.uri, name:componentRepo.name}]}}
 	},
 	{rejects} = require('assert'),
-	rimraf = require('rimraf')
+	rimraf = require('rimraf'),
+	updateBase = require('../../js/lib/gitUpdatePackage')
 
 describe('update/create packages then execute docker-compose build', () => {
 	after(() => {
@@ -31,6 +28,8 @@ describe('update/create packages then execute docker-compose build', () => {
 	)
 	it('resolves for example config', function(){
 		this.timeout(10000)
-		return build(minConfig)
+		return updateBase(
+			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
+		).then(()=>build(minConfig))
 	})
 })

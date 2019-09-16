@@ -8,9 +8,6 @@ const {join} = require('path'),
 
 module.exports = {
 	compositions:['js'],
-	repository: {
-		user:'git', domain:'github.com', scope:'a-scope', name:'compositions'
-	},
 	masterPackages,
 	push:false,
 	buildArgs:{

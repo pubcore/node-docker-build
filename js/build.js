@@ -4,11 +4,12 @@ const build = require('./lib/build'),
 
 console.time('build')
 console.log('BEGIN')
-var [,,moduleName, domain] = process.argv
-var config = loadConfig(moduleName, domain)
-if(!config){
-	process.exit()
-}
-build(config).then(() =>
-	console.timeEnd('build'), err => console.log(err)
-)
+var [,,source, domain] = process.argv
+loadConfig(source, domain).then(config => {
+	if(!config){
+		process.exit()
+	}
+	build(config).then(() =>
+		console.timeEnd('build'), err => console.log(err)
+	)
+})

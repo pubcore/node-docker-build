@@ -1,4 +1,4 @@
 FROM pubcore/node-dev:1.0.0
 ARG COMPOSITION
-COPY _dev /home/node/_dev
+COPY _master-packages /home/node/_master-packages
 COPY $COMPOSITION/ /home/node/app

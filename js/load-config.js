@@ -1,25 +1,28 @@
 'use strict'
 const {resolve, basename, dirname} = require('path'),
-	findPackageJson = require('find-package-json'),
-	{homedir} = require('os')
+	{homedir} = require('os'),
+	updateBase = require('./lib/gitUpdatePackage'),
+	parseGitUrl = require('git-url-parse')
 
-module.exports = domainModule => {
-	if(domainModule.match(/[^a-zA-Z0-9:_.@/\\-]/)){
-		throw TypeError('illegal characters found in domain-module')
+module.exports = async (source, domain) => {
+	var domainModule, baseDir
+	if(domain){
+		var {name} = parseGitUrl(source)
+		baseDir = resolve(homedir(), 'build')
+		await updateBase({uri:source, dir:resolve(baseDir, name)})
+		domainModule = resolve(baseDir, name, 'domains', domain, 'config')
+	}else{
+		domainModule = source
+		baseDir = basename(resolve(domainModule, '../../../../../'))
 	}
-
 	var config = require(domainModule)
-	var packageFile = findPackageJson(domainModule).next().filename
-	//TODO create schema and validate
 
+	//TODO create schema and validate
 	//convention: dir-name equals domain-name e.g. example.com
-	config.domain = basename(resolve(domainModule, '../'))
+	config.domain = domain || basename(resolve(domainModule, '../'))
 	//determine base directory of local (cloned) packages
-	config.baseDir = resolve(packageFile, '../../../')
-	if(config.repository || (config.repository = {})){
-		config.repository.domainDir =
-			resolve(domainModule, '../../').replace(dirname(packageFile), '').replace(/^[/\\]/, '')
-	}
+	config.baseDir = baseDir
+	config.workingDir = dirname(domainModule)
 	if(config.push === undefined){
 		config.push = true
 	}

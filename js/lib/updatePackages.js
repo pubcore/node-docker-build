@@ -4,10 +4,9 @@ const {resolve} = require('path'),
 	{platform} = require('os')
 
 //update packages which are not part of own scopes
-module.exports = ({domain, compositions, masterPackages, baseDir, repository}) => new Promise( res =>
+module.exports = ({compositions, masterPackages, workingDir}) => new Promise( res =>
 	compositions.forEach(composition => {
-		var {scope, name, domainDir} = repository,
-			compositionDir = resolve(baseDir, scope, name, domainDir||'', domain, composition),
+		var compositionDir = resolve(workingDir, composition),
 			nodeModulesDir = resolve(compositionDir, 'node_modules')
 		console.log(`START install composition "${composition}" in ${compositionDir}`)
 		if(Object.keys(masterPackages||{}).length){
@@ -15,8 +14,8 @@ module.exports = ({domain, compositions, masterPackages, baseDir, repository}) =
 				execSync(`rm -f ${resolve(nodeModulesDir, '@'+scope)}`)
 				execSync('npm i --progress=false --loglevel=error', {cwd:compositionDir})
 				platform() === 'win32' ?
-					execSync(`mklink /D @${scope} ..\\..\\_dev\\${scope}`, {cwd:nodeModulesDir})
-					: execSync(`ln -s ../../_dev/${scope} @${scope}`, {cwd:nodeModulesDir})
+					execSync(`mklink /D @${scope} ..\\..\\_master-packages\\${scope}`, {cwd:nodeModulesDir})
+					: execSync(`ln -s ../../_master-packages/${scope} @${scope}`, {cwd:nodeModulesDir})
 			})
 		}else{
 			execSync('npm i --progress=false --loglevel=error', {cwd:compositionDir})

@@ -3,19 +3,17 @@ const {spawn} = require('child_process'),
 	debug = require('debug')('node-docker-build'),
 	processList = {}
 
-const call = args => {
-	var {script, moduleName, logPath, cwd, detach} = args,
-		startProcess = `node ${script} ${moduleName} > ${logPath}_${script}.log 2>&1`
+const exec = args => {
+	var {detach} = args
+	detach === false ? callSync(args) : call(args)
+}
 
-	if(detach === false){
-		return callSync(args)
-	}
-
+const call = ({script, configModule, repo, cwd, logPath, domain}) => {
+	var startProcess = `node ${script} ${repo||configModule} ${domain||''} > ${logPath}_${script}.log 2>&1`
+	debug(`spawn command: ${startProcess}`)
 	if(processList[script]){
 		processList[script].kill('SIGKILL')
 	}
-
-	debug(`spawn command: ${startProcess}`)
 	processList[script] = spawn(
 		startProcess,
 		{
@@ -28,8 +26,8 @@ const call = args => {
 	)
 }
 
-const callSync = ({script, moduleName, cwd}) => {
-	var startProcess = `node ${script} ${moduleName}`
+const callSync = ({script, configModule, repo, domain, cwd}) => {
+	var startProcess = `node ${script} ${repo||configModule} ${domain||''}`
 	debug(`spawn command: ${startProcess}`)
 	spawn(
 		startProcess,
@@ -43,8 +41,8 @@ const callSync = ({script, moduleName, cwd}) => {
 }
 
 module.exports = {
-	singletonExec: config => call({...config}),
-	build: config => call({script:'build', ...config}),
-	deploy: config => call({script:'deploy', ...config}),
-	buildDeploy: config => call({script:'build-deploy', ...config})
+	singletonExec: config => exec({...config}),
+	build: config => exec({script:'build', ...config}),
+	deploy: config => exec({script:'deploy', ...config}),
+	buildDeploy: config => exec({script:'build-deploy', ...config})
 }

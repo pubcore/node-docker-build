@@ -1,27 +1,21 @@
 'use strict'
 const loader = require('../js/load-config'),
-	{deepEqual, throws, ok, equal} = require('assert'),
+	{deepEqual, ok, equal} = require('assert'),
 	{existsSync} = require('fs'),
 	{join} = require('path'),
 	config = join(__dirname + '/config.js')
 
 describe('domain-config module loader', () => {
-	it('validates config module string', () => {
-		throws(() => loader('no white space'), TypeError)
-	})
-	it('returns module, if domain is not given', () => {
-		deepEqual(loader(config)['test.com'], {})
-	})
-	it('sets "domain" based on convention', () => {
-		deepEqual(loader(config).domain, 'test')
-	})
-	it('sets "basePath" based on convention', () => {
-		ok(existsSync(loader(config).baseDir))
-	})
-	it('sets "repository.domainDir" based on location of domain folders', () => {
-		equal(loader(config).repository.domainDir, '')
-	})
-	it('sets "push" to true as default', () => {
-		equal(loader(config).push, true)
-	})
+	it('returns module, if domain is not given', () =>
+		loader(config).then(res => deepEqual(res['test.com'], {}))
+	)
+	it('sets "domain" based on convention', () =>
+		loader(config).then(res => deepEqual(res.domain, 'test'))
+	)
+	it('sets "workingDir" based on convention', () =>
+		loader(config).then(res => ok(existsSync(res.workingDir)))
+	)
+	it('sets "push" to true as default', () =>
+		loader(config).then(res => equal(res.push, true))
+	)
 })

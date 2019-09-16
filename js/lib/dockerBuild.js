@@ -1,16 +1,15 @@
 'use strict'
-const path = require('path'),
-	{DOCKER_HOST} =  process.env,
+const {DOCKER_HOST} =  process.env,
 	cp = require('child_process'),
 	buildArg = require('./buildArgs'),
-	{platform} = require('os')
+	{platform} = require('os'),
+	{basename, resolve} = require('path')
 
 module.exports = config => new Promise((res, rej) => {
-	var {repository, domain, target, buildArgs, push, buildCache} = config,
-		{scope, name, domainDir} = repository,
+	var {domain, target, buildArgs, push, buildCache, workingDir} = config,
+		name = basename(resolve(workingDir, '../../')),
 		{home} = target || {},
-		subPath = `${scope}/${name}/${domainDir}/${domain}`,
-		dir = path.resolve(config.baseDir, subPath),
+		subPath = `${name}/domains/${domain}`,
 		compose = (cmd, args='') => (
 			DOCKER_HOST ?
 				`docker run --rm -v /var/run/:/var/run -v ${home}:${home} -v ${home}:/root -v domains:/wd -w /wd/${subPath} docker/compose:1.23.2`
@@ -22,7 +21,7 @@ module.exports = config => new Promise((res, rej) => {
 		command = `${exe}${buildCacheCommand}${compose('build')}${pushCommand}`
 
 	console.log(command)
-	cp.spawn( command, {cwd:dir, stdio:'inherit', shell:true} )
+	cp.spawn( command, {cwd:workingDir, stdio:'inherit', shell:true} )
 		.on('exit', code => code === 0 ? res() : rej(new Error({code})))
 		.on('error', err => rej(new Error(err)))
 })

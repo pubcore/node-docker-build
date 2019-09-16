@@ -12,9 +12,6 @@
 
 module.exports = {
 	compositions:['test'], //compostions of subdomains e.g. test.example.com
-	repository: {  //this repository contains the "domain" folder
-		user:'git', domain:'github.com', scope:'your-scope', name:'compositions'
-	},
 	masterPackages:{ //optional, used for development systems
 		'your-scope':{
 			user:'git',
@@ -33,18 +30,34 @@ module.exports = {
 		'verdaccio-conf-v2':'verdaccio/conf/config.yaml'
 	},
 	detach: true //optional, if false std-out/-err is piped to current shell,
-	push: true //ptional, if false no docker-compose push will be executed
+	push: true //optional, if false no docker-compose push will be executed
 }
 ```
 
-#### Tested features
+#### Examples
+1) In context of an CI/CD server:
+Build, push and deploy some images on a dev system composition (dev.example.com)
+Execution is done in background (spawn a script).
+If there is already running one, it will be killed.
+Output is piped to file within defined "logPath".
+```
+import {buildDeploy} from '@pubcore/node-docker-build'
 
-	build and deployment automation
-	  ✓ exports build, deploy and buildDeploy functions
-	  ✓ ensures only one process is running for given script
+buildDeploy({
+	repo:'git@github.com:your-scope/compositions.git',
+	domain:'dev.example.com',
+	logPath:'~/'
+})
+```
 
-	domain-config module loader
-	  ✓ loads config module and returns config of given domain
-	  ✓ validates config module string (path to config.js package)
-		✓ sets "domain" based on convention ()
-		✓ sets "baseDir" based on convention
+In context of local compositions package, on developers machine:
+Build and push some images of a domain.
+Execution runns in foreground (detach=false), stdout to console
+```
+const {build} = require('@pubcore/node-docker-build')
+build({
+	configModule: resolve(__dirname, 'domains', 'host.docker.internal' , 'config'),
+	logPath: '../../../../',
+	detach: false,
+})
+```
