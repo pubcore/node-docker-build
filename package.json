@@ -6,7 +6,7 @@
   "main": "js/index.js",
   "license": "MIT",
   "name": "@pubcore/node-docker-build",
-  "version": "1.13.3",
+  "version": "2.0.0",
   "description": "Scripts to build and deploy pubcore compositions",
   "directories": {
     "test": "test"
