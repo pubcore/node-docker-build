@@ -10,7 +10,9 @@ const updateMasterPackage = require('./updateMasterPackage'),
 	buildArgs = require('./buildArgs')
 
 //update master branch of all own packages (masterPackages)
-module.exports = async ({masterPackages, workingDir, target, baseImage}) => {
+module.exports = async ({
+	masterPackages, workingDir, target, baseImage, sshHosts
+}) => {
 	var wd = resolve(workingDir, '..', '..', 'working-dir')
 	await Promise.all(Object.keys(masterPackages).reduce((acc, scope) => {
 		masterPackages[scope].packages.forEach(val => {
@@ -24,10 +26,11 @@ module.exports = async ({masterPackages, workingDir, target, baseImage}) => {
 	}, []))
 	await Promise.all(['docker-compose.yml', 'Dockerfile-master']
 		.map( file => copyFile(
-			resolve(__dirname, 'docker', file), resolve(wd, file)
+			resolve(__dirname, 'docker', file),
+			resolve(wd, file)
 		))
 	)
-	var args = {BASE_IMAGE:baseImage}
+	var args = {BASE_IMAGE:baseImage, SSH_HOSTS:sshHosts}
 	await spawnCommand(
 		`${dockerCompose((target||{}).home, '_master-packages')} build ${buildArgs(args)}`,
 		wd

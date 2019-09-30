@@ -28,7 +28,7 @@ describe('update/create packages then execute docker-compose build', () => {
 		rejects(build({}))
 	)
 	it('resolves for example config', function(){
-		this.timeout(10000)
+		this.timeout(15000)
 		return updateBase(
 			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
 		).then(()=>build(minConfig))

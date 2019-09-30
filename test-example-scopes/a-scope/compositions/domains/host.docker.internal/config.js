@@ -7,6 +7,7 @@ const {join} = require('path'),
 		: `"$(cat ${file})"`
 
 module.exports = {
+	sshHosts:'github.com',
 	baseImage:'node:10.15.1-alpine',
 	compositions:['js'],
 	masterPackages,

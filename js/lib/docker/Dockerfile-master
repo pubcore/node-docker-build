@@ -1,4 +1,20 @@
 ARG BASE_IMAGE
+#alpine base image is assumed
 
 FROM ${BASE_IMAGE}
+ARG SSH_HOSTS
+ENV NODE_ENV=production
+
+RUN apk --update add --no-cache git openssh && \
+  rm -rf /var/cache/apk/*
+
+COPY --from=library/docker:latest /usr/local/bin/docker /usr/bin/docker
+
+USER node:1000
+RUN mkdir /home/node/.ssh
+RUN ssh-keyscan $SSH_HOSTS > /home/node/.ssh/known_hosts
+
+RUN mkdir /home/node/build && chown node:1000 /home/node/build
+VOLUME /home/node/build
+
 COPY --chown=node:1000 _master-packages /home/node/_master-packages
