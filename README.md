@@ -11,6 +11,7 @@
 'use strict'
 
 module.exports = {
+	baseImage:'node:10.15.1-alpine'
 	compositions:['test'], //compostions of subdomains e.g. test.example.com
 	masterPackages:{ //optional, used for development systems
 		'your-scope':{

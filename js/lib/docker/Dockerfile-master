@@ -1,0 +1,4 @@
+ARG BASE_IMAGE
+
+FROM ${BASE_IMAGE}
+COPY --chown=node:1000 _master-packages /home/node/_master-packages

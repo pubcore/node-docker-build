@@ -9,6 +9,7 @@ const build = require('../../js/lib/build'),
 	domain = 'host.docker.internal',
 	workingDir = join(baseDir, compositionsRepo.name, 'domains', domain),
 	minConfig = {
+		baseImage:'node:10.15.1-alpine',
 		workingDir,
 		compositions:['js'],
 		domain:'host.docker.internal',

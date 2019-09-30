@@ -1,4 +1,3 @@
-FROM pubcore/node-dev:1.0.0
+FROM js-master:latest
 ARG COMPOSITION
-COPY _master-packages /home/node/_master-packages
 COPY $COMPOSITION/ /home/node/app

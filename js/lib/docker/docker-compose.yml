@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  js-master:
+    image: js-master:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile-master
