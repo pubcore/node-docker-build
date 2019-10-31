@@ -11,7 +11,9 @@ module.exports = async config => {
 		{home} = target || {},
 		subPath = `${name}/domains/${domain}`,
 		compose = (cmd, args='') =>
-			`${dockerCompose(home, subPath)} ${args} ${cmd} ${cmd==='build' ? buildArg(buildArgs) : ''}`,
+			`${dockerCompose(home, subPath)} ${args} ${cmd} ${cmd==='build' ?
+				`${buildArg(buildArgs)} --parallel ` :
+				''}`,
 		buildCacheCommand = buildCache ? `${compose('build', '-f docker-compose-build-cache.yml')} && ` : '',
 		pushCommand = push ? ` && ${compose('push')} --ignore-push-failures ` : '',
 		exe = platform() === 'win32' ? 'PowerShell.exe -NonInteractive -Command ' : '',
