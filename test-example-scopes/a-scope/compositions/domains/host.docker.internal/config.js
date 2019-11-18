@@ -14,7 +14,6 @@ module.exports = {
 	push:false,
 	buildArgs:{
 		SSH_PK: readFile(join(homedir(), '.ssh', 'id_rsa')),
-		NPMRC: readFile(join(homedir(), '.npmrc')),
-		STAMP: Date.now()
+		NPMRC: readFile(join(homedir(), '.npmrc'))
 	}
 }

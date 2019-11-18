@@ -6,7 +6,7 @@ const buildArg = require('./buildArgs'),
 	spawnCommand = require('./spawnCommand')
 
 module.exports = async config => {
-	var {domain, target, buildArgs, push, buildCache, workingDir} = config,
+	var {domain, target, buildArgs, push, workingDir} = config,
 		name = basename(resolve(workingDir, '../../')),
 		{home} = target || {},
 		subPath = `${name}/domains/${domain}`,
@@ -14,10 +14,9 @@ module.exports = async config => {
 			`${dockerCompose(home, subPath)} ${args} ${cmd} ${cmd==='build' ?
 				`${buildArg(buildArgs)} --parallel ` :
 				''}`,
-		buildCacheCommand = buildCache ? `${compose('build', '-f docker-compose-build-cache.yml')} && ` : '',
 		pushCommand = push ? ` && ${compose('push')} --ignore-push-failures ` : '',
 		exe = platform() === 'win32' ? 'PowerShell.exe -NonInteractive -Command ' : '',
-		command = `${exe}${buildCacheCommand}${compose('build')}${pushCommand}`
+		command = `${exe}${compose('build')}${pushCommand}`
 
 	await spawnCommand(command, workingDir)
 }

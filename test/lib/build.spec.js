@@ -11,9 +11,10 @@ const build = require('../../js/lib/build'),
 	minConfig = {
 		baseImage:'node:10.15.1-alpine',
 		workingDir,
-		compositions:['js'],
+		buildDir:'_build',
+		compositions:['js', () => Promise.resolve('php')],
 		domain:'host.docker.internal',
-		masterPackages:{'a-scope':{packages:[{uri:componentRepo.uri, name:componentRepo.name}]}}
+		masterPackages:{'a-scope':{packages:[{uri:componentRepo.uri, name:componentRepo.name}]}},
 	},
 	{rejects} = require('assert'),
 	rimraf = require('rimraf'),
@@ -32,5 +33,13 @@ describe('update/create packages then execute docker-compose build', () => {
 		return updateBase(
 			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
 		).then(()=>build(minConfig))
+	})
+	it('rejects if errors occure in optional composition builder', function(){
+		this.timeout(15000)
+		return updateBase(
+			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
+		).then(() => rejects(
+			build( {...minConfig, compositions:[() => Promise.reject()]} )
+		))
 	})
 })

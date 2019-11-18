@@ -4,5 +4,5 @@ ENV NODE_ENV=production
 USER node:1000
 RUN mkdir /home/node/app
 WORKDIR /home/node/app
-COPY $COMPOSITION/ .
+COPY _build/$COMPOSITION/ .
 CMD ["node", "server.js"]
