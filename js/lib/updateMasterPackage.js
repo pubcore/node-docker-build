@@ -18,7 +18,11 @@ module.exports = ({baseDir, user, domain, scope, name, uri}) =>
 				).on('error', err => rej(new Error(err)))
 			}
 
-		updateMaster({dir, uri:uri||`${user}@${domain}:${scope}/${name}.git`}).then(
+		updateMaster({
+			dir,
+			uri:uri||`${user}@${domain}:${scope}/${name}.git`,
+			resetToMaster: true
+		}).then(
 			result => result === 'hasChanged' ?
 				npmInstall()
 				: res(console.log(`DONE update, ${packageName} is up-to-date`)),
