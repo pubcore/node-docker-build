@@ -12,7 +12,7 @@ module.exports = ({compositions, workingDir}) => Promise.all(
 mkdir -p ${buildTarget} && \
  cp -rf ${composition}/  ${buildTarget}/ &&\
  cd ${buildTarget} &&\
- npm i --progress=false --loglevel=error`,
+ npm update --progress=false --loglevel=error`,
 				{cwd:workingDir, stdio:'inherit', shell:true})
 			cp.on('exit', code =>
 				code != 0 ?
