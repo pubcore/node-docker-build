@@ -10,7 +10,7 @@ var [,,source, domain] = process.argv,
 	killChilds = () => (childProcesses||[]).forEach(cp => {
 		try {
 			process.kill(-cp.pid)
-		} catch (e) {console.log(e.message)}
+		} catch (e){/**/}
 	})
 
 process.on('error', killChilds)
