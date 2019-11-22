@@ -1,3 +1,9 @@
+## 3.1.0 2019-11-22
+* node_modules folder in source composition folder is not allowed, added check
+* collect all child build-processes in order to kill it, if one rejects
+  requirement: spawend process must set option {detached:true}
+* use npm update instead of install
+
 ## 3.0.0 2019-11-18
 * introduce extra "\_build" directory per domain (must be ignored by VCS). Docker builds must copy builded application files from there.
 * add option to configure build promises as element of "compositions". This promises should resolve to name of composition on success.
