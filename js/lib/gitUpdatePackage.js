@@ -22,7 +22,7 @@ module.exports = ({dir, uri, resetToMaster}) => new Promise((res, rej) => {
 
 			process.stdout.on('data', data => {
 				var output = data.toString()
-				console.log(`${basename(dir)}, git: ${output}`)
+				console.log(`package "${basename(dir)}", git: ${output}`)
 				if(output.match(/Fast-forward/gi)) status = 'hasChanged'
 			})
 			process.stderr.on('data', data => {
