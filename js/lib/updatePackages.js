@@ -1,12 +1,13 @@
 'use strict'
 const {join} = require('path'),
-	{spawn} = require('child_process')
+	{spawn} = require('child_process'),
+	throat = require('throat')(3)
 
 //update packages which are not part of own scopes
 module.exports = ({compositions, workingDir}, childProcesses) => Promise.all(
-	compositions.reduce((acc, composition) => { acc.push( new Promise((res, rej) => {
+	compositions.reduce((acc, composition) => { acc.push(throat(() => (childProcesses||[])[0] === 'KILLED' ? Promise.reject() : new Promise((res, rej) => {
 		if(typeof composition === 'string'){
-
+			console.log(`BEGIN updatePackages for composition "${composition}"`)
 			//javascript package is assumed, use npm install
 			var buildTarget = join(workingDir, '_build', composition),
 				cp = spawn(`\
@@ -31,7 +32,7 @@ module.exports = ({compositions, workingDir}, childProcesses) => Promise.all(
 				err => rej(err)
 			)
 		}
-	}))
+	})))
 
 	return acc
 	}, [])

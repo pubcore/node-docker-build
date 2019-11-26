@@ -37,12 +37,18 @@ describe('update/create packages then execute docker-compose build', () => {
 			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
 		).then(()=>build(minConfig))
 	})
+	it('rejects if one of builds has been killed', function(){
+		this.timeout(60000)
+		return updateBase(
+			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
+		).then(()=>rejects(build(minConfig, ['KILLED', () => Promise.resolve('test')])))
+	})
 	it('rejects if errors occure in optional composition builder', function(){
 		this.timeout(60000)
 		return updateBase(
 			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
 		).then(() => rejects(
-			build( {...minConfig, compositions:[() => Promise.reject()]} )
+			build( {...minConfig, compositions:[() => Promise.reject()]}, [])
 		))
 	})
 	it('rejects if a node_modules exists in source folder', function(){
