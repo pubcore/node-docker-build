@@ -2,7 +2,7 @@
 const deploy = require('./lib/deploy'),
 	loadConfig = require('./load-config')
 
-var [,,source, domain] = process.argv
+var [,,source, filter, domain] = process.argv
 loadConfig(source, domain).then(config => {
 	if(!config){
 		process.exit()

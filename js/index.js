@@ -4,12 +4,12 @@ const {spawn} = require('child_process'),
 	processList = {}
 
 const exec = args => {
-	var {detach} = args
-	detach === false ? callSync(args) : call(args)
+	var {detach, one} = args
+	detach === false ? callSync(args, one) : call(args, one)
 }
 
-const call = ({script, configModule, repo, cwd, logPath, domain}) => {
-	var startProcess = `node ${script} ${repo||configModule} ${domain||''} > ${logPath}_${script}.log 2>&1`
+const call = ({script, configModule, repo, cwd, logPath, domain}, one) => {
+	var startProcess = `node ${script} ${repo||configModule} ${one||'_all_'} ${domain||''}  > ${logPath}_${script}.log 2>&1`
 	debug(`spawn command: ${startProcess}`)
 	if(processList[script]){
 		processList[script].kill('SIGKILL')
@@ -26,8 +26,8 @@ const call = ({script, configModule, repo, cwd, logPath, domain}) => {
 	)
 }
 
-const callSync = ({script, configModule, repo, domain, cwd}) => {
-	var startProcess = `node ${script} ${repo||configModule} ${domain||''}`
+const callSync = ({script, configModule, repo, domain, cwd}, one) => {
+	var startProcess = `node ${script} ${repo||configModule} ${one||'_all_'} ${domain||''}`
 	debug(`spawn command: ${startProcess}`)
 	spawn(
 		startProcess,
