@@ -1,3 +1,8 @@
+## 3.4.0 2019-11-30
+* update master git-dependency only if it changed on remote
+* use npm install (instead of update)
+* support build only one composition (and skip all other)
+
 ## 3.1.0 2019-11-22
 * node_modules folder in source composition folder is not allowed, added check
 * collect all child build-processes in order to kill it, if one rejects
