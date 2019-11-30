@@ -21,7 +21,7 @@ module.exports = ({compositions, workingDir}, childProcesses, one) => Promise.al
  mkdir -p ${buildTarget} && \
  cp -rf ${composition}/ ${buildTarget}/ &&\
  cd ${buildTarget} &&\
- npm update --progress=false --loglevel=error`,
+ npm install --progress=false --loglevel=error`,
 						{cwd:workingDir, stdio:'inherit', shell:true, detached: true}
 						)
 					childProcesses && childProcesses.push(cp)
