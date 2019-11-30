@@ -5,9 +5,9 @@ const {join} = require('path'),
 
 //update packages which are not part of own scopes
 module.exports = ({compositions, workingDir}, childProcesses, one) => Promise.all(
-	compositions.reduce((acc, composition) => { acc.push(throat(() =>
+	compositions.reduce((acc, composition, index) => { acc.push(throat(() =>
 		(childProcesses||[])[0] === 'KILLED' ?
-			Promise.reject()
+			Promise.resolve(console.log(`INFO skip update of composition #${index} (reseived kill)`))
 			: new Promise((res, rej) => {
 				if(typeof composition === 'string'){
 					if(one && one !== '_all_' && one !== composition){
@@ -30,12 +30,12 @@ module.exports = ({compositions, workingDir}, childProcesses, one) => Promise.al
 						code != 0 ?
 							rej(console.log(`ERROR uppdatePackages for composition "${composition}", exit with code ${code}`)) :
 							res(console.log(`DONE updatePackages for composition "${composition}" in ${buildTarget}`)))
-					cp.on('error', err => rej(err))
+					cp.on('error', err => rej(new Error(err)))
 				}else{
 					//external function is assumed (must return a promise), just execute it
 					composition(workingDir, childProcesses, one).then(
 						name => res(console.log(`DONE updatePackages for composition ${name}`)),
-						err => rej(err)
+						err => rej(new Error(err))
 					)
 				}
 			})))

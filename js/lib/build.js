@@ -19,9 +19,12 @@ var childProcesses = [],
 process.on('error', killChilds)
 process.on('SIGINT', killChilds)
 
-module.exports = async (config, one) => {
-	Object.keys(config.masterPackages||{}).length &&
-		await updateMasterPackages(config)
+module.exports = async (config, one) => {try{
+	childProcesses = []
+	await updateMasterPackages(config, one)
 	await updatePackages(config, childProcesses, one)
 	await dockerBuild(config, one)
-}
+}catch(e){
+	killChilds()
+	return Promise.reject(e)
+}}

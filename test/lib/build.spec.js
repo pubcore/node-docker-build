@@ -12,68 +12,46 @@ const build = require('../../js/lib/build'),
 		baseImage:'node:10.15.1-alpine',
 		workingDir,
 		buildDir:'_build',
-		compositions:['js', () => Promise.resolve('php')],
+		compositions:['js', () => Promise.resolve('php'), 'xyz'],
 		domain,
 		masterPackages:{'a-scope':{packages:[{uri:componentRepo.uri, name:componentRepo.name}]}},
 	},
-	{rejects} = require('assert'),
+	{rejects, doesNotReject} = require('assert'),
 	rimraf = require('rimraf'),
 	updateBase = require('../../js/lib/gitUpdatePackage'),
 	mkdir = require('util').promisify(require('fs').mkdir),
-	{spawn} = require('child_process'),
-	process = require('process')
+	{spawn} = require('child_process')
 
 describe('update/create packages then execute docker-compose build', () => {
-	after(() => {
-		rimraf.sync(compositionsRepo.dir)
-		rimraf.sync(join(baseDir, 'a-scope'))
-	})
+	beforeEach(() => updateBase(
+		{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
+	))
+	afterEach(() => rimraf.sync(join(baseDir, 'a-scope')))
+	after(() => rimraf.sync(compositionsRepo.dir))
+
 	it('rejects if config is empty', () =>
 		rejects(build({}))
 	)
-	it('resolves for example config', function(){
-		this.timeout(60000)
-		return updateBase(
-			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
-		).then(()=>build(minConfig))
-	})
-	it('rejects if one of builds has been killed', function(){
-		this.timeout(60000)
-		return updateBase(
-			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
-		).then(()=>rejects(build(minConfig, ['KILLED', () => Promise.resolve('test')])))
-	})
-	it('rejects if errors occure in optional composition builder', function(){
-		this.timeout(60000)
-		return updateBase(
-			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
-		).then(() => rejects(
+	it('resolves for example config', () =>
+		doesNotReject(build(minConfig, 'js'))
+	).timeout(60000)
+	it('rejects if errors occure in optional composition builder', () =>
+		rejects(
 			build( {...minConfig, compositions:[() => Promise.reject()]}, [])
-		))
-	})
-	it('rejects if a node_modules exists in source folder', function(){
-		this.timeout(60000)
-		return updateBase(
-			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
-		).then(() => mkdir(join(workingDir, 'js', 'node_modules'), {recursive:true})
-			.then(() => rejects(build(minConfig)))
 		)
-	})
-	it('kills spawned child process (required: detached=true)', function(){
-		this.timeout(60000)
-		var cpList = []
-		return updateBase(
-			{dir:join(baseDir, compositionsRepo.name), uri:compositionsRepo.uri}
-		).then(() => mkdir(join(workingDir, 'js', 'node_modules'), {recursive:true})
+	).timeout(60000)
+	it('rejects if a node_modules exists in source folder', () =>
+		mkdir(join(workingDir, 'js', 'node_modules'), {recursive:true})
+			.then(() => rejects(build(minConfig)))
+	).timeout(60000)
+	it('kills spawned child process (required: detached=true)', () =>
+		mkdir(join(workingDir, 'js', 'node_modules'), {recursive:true})
 			.then(() => rejects(build({
 				...minConfig,
-				compositions:[(wd, cpList) => {cpList.push(spawn('sleep 60', {detached:true, shell:true}))}, 'js']
-			},
-			cpList
-			).then(
-				()=>{throw 'reject is inspected'},
-				() => Promise.reject(cpList.forEach(cp => process.kill(-cp.pid))))
-			))
-		)
-	})
+				compositions:[
+					(wd, cpList) => {cpList.push(spawn('sleep 10', {detached:true, shell:true}))},
+					'js'
+				]
+			})))
+	).timeout(60000)
 })

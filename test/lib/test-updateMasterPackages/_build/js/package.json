@@ -1,0 +1,11 @@
+{
+  "name": "dummy",
+  "version": "0.1.0",
+  "description": "dummy package for testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pubcore",
+  "license": "MIT"
+}

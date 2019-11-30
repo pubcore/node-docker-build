@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "nyc --reporter=text mocha --inspect --recursive",
+    "test": "nyc --reporter=text mocha --recursive",
     "coverage": "nyc report --reporter=text-lcov"
   },
   "main": "js/index.js",
