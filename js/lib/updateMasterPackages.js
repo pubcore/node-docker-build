@@ -12,6 +12,7 @@ const {join} = require('path'),
 		try {
 			var packageLockJson = await readFile(packageLockFile, 'utf-8'),
 				packageLock = JSON.parse(packageLockJson),
+				hasChanged = false,
 				changed = await Promise.all(Object.keys(packageLock.dependencies).reduce(
 					(acc, packageName) => {
 						var {version, from} = packageLock.dependencies[packageName]
@@ -22,6 +23,8 @@ const {join} = require('path'),
 							acc.push(throat(async () => {
 								var latest = (await gitGetLatest(uri)).trim()
 								if(latest.indexOf(commitHash) < 0){
+									delete packageLock.dependencies[packageName]
+									hasChanged = true
 									return {
 										current: commitHash,
 										latest: latest.match(/^([a-f0-9]+)/)[1],
@@ -33,14 +36,7 @@ const {join} = require('path'),
 						return acc
 					}, []))
 
-			var hasChanged, newPackageLockJson = changed.reduce((acc, change) => {
-				if(change) {
-					acc = acc.replace(change.current, change.latest)
-					hasChanged = true
-				}
-				return acc
-			}, packageLockJson)
-
+			var newPackageLockJson = JSON.stringify(packageLock, null, 2)
 			if(hasChanged){
 				await writeFile(packageLockFile, newPackageLockJson, 'utf8')
 				await Promise.all(changed.reduce((acc, change) => {

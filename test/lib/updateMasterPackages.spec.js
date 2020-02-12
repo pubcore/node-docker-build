@@ -4,7 +4,8 @@ const updateMasters = require('../../js/lib/updateMasterPackages'),
 	{doesNotReject, ok, rejects} = require('assert'),
 	workingDir = join(__dirname, 'test-updateMasterPackages'),
 	{copySync, removeSync, pathExistsSync} = require('fs-extra'),
-	jsDir = join(workingDir, '_build', 'js')
+	jsDir = join(workingDir, '_build', 'js'),
+	{readFileSync} = require('fs')
 
 before(() => {
 	copySync(join(jsDir, '_node_modules'), join(jsDir, 'node_modules'))
@@ -24,17 +25,18 @@ describe('update git-dependencies, based on latest remote commit-hash', () => {
 			}, 'js')
 		)
 	)
-	it('updates master git-dependencies in package-lock.json and deletes correspondin package in node_modules, if changed', async () => {
+	it('updates master git-dependencies in package-lock.json and deletes corresponding package in node_modules, if changed', async () => {
 		await doesNotReject(
 			updateMasters({
 				workingDir, compositions:['js']
 			}, '_all_')
 		)
 		ok(!pathExistsSync(join(jsDir, 'node_modules', '@pubcore', 'docs', 'dummy.txt')))
+		var packageLock = JSON.parse(readFileSync(join(jsDir, 'package-lock.json')))
+		ok(packageLock.dependencies['@pubcore/docs'] === undefined)
+		ok(packageLock.dependencies['foo']['version'] === '...')
 	}).timeout(10000)
 	it('will reject on errors', () =>
-		rejects(
-			updateMasters({workingDir, compositions:['garbled']})
-		)
+		rejects( updateMasters({workingDir, compositions:['garbled']}) )
 	).timeout(10000)
 })
