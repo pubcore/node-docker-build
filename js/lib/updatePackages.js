@@ -4,7 +4,7 @@ const {join} = require('path'),
 	throat = require('throat')(3)
 
 //update packages which are not part of own scopes
-module.exports = ({compositions, workingDir}, childProcesses, one) => Promise.all(
+module.exports = ({compositions, workingDir, update}, childProcesses, one) => Promise.all(
 	compositions.reduce((acc, composition, index) => { acc.push(throat(() =>
 		(childProcesses||[])[0] === 'KILLED' ?
 			Promise.resolve(console.log(`INFO skip update of composition #${index} (reseived kill)`))
@@ -21,7 +21,7 @@ module.exports = ({compositions, workingDir}, childProcesses, one) => Promise.al
  mkdir -p ${buildTarget} && \
  cp -rf ${composition}/ ${buildTarget}/ &&\
  cd ${buildTarget} &&\
- npm install --progress=false --loglevel=error`,
+ npm ${update ? 'update' : 'install'} --progress=false --loglevel=error`,
 						{cwd:workingDir, stdio:'inherit', shell:true, detached: true}
 						)
 					childProcesses && childProcesses.push(cp)
