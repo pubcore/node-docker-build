@@ -1,3 +1,7 @@
+## 3.5.0 2020-02-19
+* add option "update" (default falsy), if true "npm update" is used
+* fix: Changed master of git-dependency not beeing installed
+
 ## 3.4.0 2019-11-30
 * update master git-dependency only if it changed on remote
 * use npm install (instead of update)

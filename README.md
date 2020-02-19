@@ -13,25 +13,19 @@
 module.exports = {
 	baseImage:'node:10.15.1-alpine'
 	compositions:['test'], //compostions of subdomains e.g. test.example.com
-	masterPackages:{ //optional, used for development systems
-		'your-scope':{
-			user:'git',
-			domain:'github.com',
-			packages:['some-package', 'some-other-package']
-		}
-	},
-	target:{
+	target:{ //optional, target system (deploy)
 		host:{host:'manager.example.com', key:'/home/admin/.ssh/id_rsa', user:'admin'},
 		jump:{host:'connect.example.com', key:'~/.ssh/id_rsa', user:'admin'},
 		home:'/home/admin',
 		stackName: 'example',
 		sudo:false //optional, prepend "sudo", if required for docker commands
 	},
-	configs:{ //optional, will be transfered to create docker config
+	configs:{ //optional, will be transfered to create docker config (deploy)
 		'verdaccio-conf-v2':'verdaccio/conf/config.yaml'
 	},
 	detach: true //optional, if false std-out/-err is piped to current shell,
-	push: true //optional, if false no docker-compose push will be executed
+	push: true //optional, if false no docker-compose push will be executed,
+	update: false //optional, if true "npm update" is used, else "npm install"
 }
 ```
 
