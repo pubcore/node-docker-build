@@ -24,7 +24,7 @@ describe('update git-dependencies, based on latest remote commit-hash', () => {
 				compositions:['js']
 			}, 'js')
 		)
-	)
+	).timeout(10000)
 	it('updates master git-dependencies in package-lock.json and deletes corresponding package in node_modules, if changed', async () => {
 		await doesNotReject(
 			updateMasters({
