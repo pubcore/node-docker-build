@@ -1,9 +1,7 @@
 'use strict'
 const {spawn} = require('child_process'),
 	debug = require('debug')('node-docker-build'),
-	processList = {},
-	options = {cwd:__dirname, shell:true, stdio:'ignore',
-		env:{...process.env, NODE_ENV:'production'}}
+	processList = {}
 
 const exec = args => {
 	var {detach, one} = args
@@ -16,13 +14,24 @@ const call = ({script, configModule, repo, cwd, logPath, domain}, one) => {
 	if(processList[script]){
 		processList[script].kill('SIGKILL')
 	}
-	processList[script] = spawn(startProcess, {...options, cwd, detach:true})
+	processList[script] = spawn(startProcess, {
+		cwd:cwd||__dirname,
+		shell:true,
+		detach:true,
+		stdio:'ignore',
+		env:{...process.env, NODE_ENV:'production'}
+	})
 }
 
 const callSync = ({script, configModule, repo, domain, cwd}, one) => {
 	var startProcess = `node ${script} ${repo||configModule} ${one||'_all_'} ${domain||''}`
 	debug(`spawn command: ${startProcess}`)
-	spawn(startProcess,	{...options, cwd, detach:false})
+	spawn(startProcess,	{
+		cwd:cwd||__dirname,
+		shell:true,
+		stdio:'inherit',
+		env:{...process.env, NODE_ENV:'production'}
+	})
 }
 
 module.exports = {
