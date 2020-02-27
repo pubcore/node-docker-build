@@ -35,6 +35,9 @@ describe('update/create packages then execute docker-compose build', () => {
 	it('resolves for example config', () =>
 		doesNotReject(build(minConfig, 'js'))
 	).timeout(60000)
+	it('resolves with update', () =>
+		doesNotReject(build({...minConfig, update:true}, 'js'))
+	).timeout(60000)
 	it('rejects if errors occure in optional composition builder', () =>
 		rejects(
 			build( {...minConfig, compositions:[() => Promise.reject()]}, [])
