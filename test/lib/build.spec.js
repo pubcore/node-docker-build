@@ -15,6 +15,7 @@ const build = require('../../js/lib/build'),
 		compositions:['js', () => Promise.resolve('php'), 'xyz'],
 		domain,
 		masterPackages:{'a-scope':{packages:[{uri:componentRepo.uri, name:componentRepo.name}]}},
+		buildKit:true
 	},
 	{rejects, doesNotReject} = require('assert'),
 	rimraf = require('rimraf'),

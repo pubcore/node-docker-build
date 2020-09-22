@@ -25,7 +25,10 @@ module.exports = {
 	},
 	detach: true //optional, if false std-out/-err is piped to current shell,
 	push: true //optional, if false no docker-compose push will be executed,
-	update: false //optional, if true "npm update" is used, else "npm install"
+	update: false //optional, if true "npm update" is used, else "npm install",
+	forcePull: false //optional, if true --pull flag is set for docker build,
+	buildKit: false //optional, if true docker build kit is enabled for build,
+	parallelUpdates: 3 //number of parallel composition updates
 }
 ```
 
