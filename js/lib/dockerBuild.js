@@ -12,8 +12,8 @@ module.exports = async (config, one) => {
 		{home} = target || {},
 		subPath = `${name}/domains/${domain}`,
 		compose = cmd =>
-			`${buildKit?'DOCKER_BUILDKIT=1 ':''}${dockerCompose(home, subPath)} ${cmd} ${cmd==='build' ?
-				`${forcePull ? '--pull' : ''} ${buildArg(buildArgs)} --parallel ${serivce}`
+			`${buildKit ? 'COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 ':'--parallel'}${dockerCompose(home, subPath)} ${cmd} ${cmd==='build' ?
+				`${forcePull ? '--pull' : ''} ${buildArg(buildArgs)} ${serivce}`
 				: ''}`,
 		pushCommand = push ? ` && ${compose('push')} --ignore-push-failures ${serivce}` : '',
 		exe = platform() === 'win32' ? 'PowerShell.exe -NonInteractive -Command ' : '',
