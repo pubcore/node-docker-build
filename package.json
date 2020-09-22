@@ -31,8 +31,8 @@
     "rimraf": "^3.0.2"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "git-url-parse": "^11.1.2",
+    "debug": "^4.2.0",
+    "git-url-parse": "^11.2.0",
     "throat": "^5.0.0"
   }
 }
