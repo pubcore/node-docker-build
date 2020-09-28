@@ -1,14 +1,14 @@
 'use strict'
 const {join} = require('path'),
-	throat = require('throat')(4),
 	{promisify} = require('util'),
 	fs = require('fs'),
 	readFile = promisify(fs.readFile),
 	writeFile = promisify(fs.writeFile),
 	rimraf = require('rimraf'),
 	gitGetLatest = require('./gitGetLatest'),
-	updateMasters = async ({workingDir, composition}) => {
-		var packageLockFile = join(workingDir, '_build', composition, 'package-lock.json')
+	updateMasters = async ({workingDir, composition, parallelUpdates=2}) => {
+		var throat = require('throat')(parallelUpdates),
+			packageLockFile = join(workingDir, '_build', composition, 'package-lock.json')
 		try {
 			var packageLockJson = await readFile(packageLockFile, 'utf-8'),
 				packageLock = JSON.parse(packageLockJson),

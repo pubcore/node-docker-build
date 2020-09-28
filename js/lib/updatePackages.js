@@ -3,7 +3,7 @@ const {join} = require('path'),
 	{spawn} = require('child_process')
 
 //update packages which are not part of own scopes
-module.exports = ({compositions, workingDir, update, parallelUpdates=3}, childProcesses, one) => {
+module.exports = ({compositions, workingDir, update, parallelUpdates=2}, childProcesses, one) => {
 	var throat = require('throat')(parallelUpdates)
 	return Promise.all(
 		compositions.reduce((acc, composition, index) => { acc.push(throat(() =>
