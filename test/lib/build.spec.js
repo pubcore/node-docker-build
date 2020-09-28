@@ -36,6 +36,9 @@ describe('update/create packages then execute docker-compose build', () => {
 	it('resolves for example config', () =>
 		doesNotReject(build(minConfig, 'js'))
 	).timeout(60000)
+	it('resolves for disabled buildKit', () =>
+		doesNotReject(build({...minConfig, buildKit:false}, 'js'))
+	).timeout(60000)
 	it('resolves with update', () =>
 		doesNotReject(build({...minConfig, update:true}, 'js'))
 	).timeout(60000)
