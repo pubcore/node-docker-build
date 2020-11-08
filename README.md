@@ -28,7 +28,7 @@ module.exports = {
 	update: false //optional, if true "npm update" is used, else "npm install",
 	forcePull: false //optional, if true --pull flag is set for docker build,
 	buildKit: false //optional, if true docker build kit is enabled for build,
-	parallelUpdates: 3 //number of parallel composition updates
+	retryOptions: {retries:1, minTimeout:30000} //retry options for updatePackages
 }
 ```
 
@@ -55,7 +55,6 @@ Execution runns in foreground (detach=false), stdout to console
 const {build} = require('@pubcore/node-docker-build')
 build({
 	configModule: resolve(__dirname, 'domains', 'host.docker.internal' , 'config'),
-	logPath: '../../../../',
 	detach: false,
 })
 ```

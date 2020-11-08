@@ -7,12 +7,8 @@ console.time('build')
 console.log('BEGIN')
 var [,,source, one, domain] = process.argv
 
-loadConfig(source, domain).then(config => {
-	if(!config){
-		process.exit()
-	}
-	build(config, one).then(
-		() => console.timeEnd('build'),
-		err => console.log('ERROR occured', err||'')
-	)
-})
+;(async () => {
+	var config = await loadConfig(source, domain)
+	await build(config, one)
+	console.timeEnd('build')
+})()

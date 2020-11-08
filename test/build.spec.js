@@ -1,8 +1,8 @@
 'use strict'
-const build = require('../../js/lib/build'),
+const build = require('../js/lib/build'),
 	createTestRepo = require('./gitCreateTestRepo'),
 	{join} = require('path'),
-	exampleScopeDir = join(__dirname, '..', '..', 'test-example-scopes', 'a-scope'),
+	exampleScopeDir = join(__dirname, '..', 'test-example-scopes', 'a-scope'),
 	compositionsRepo = createTestRepo({files:join(exampleScopeDir, 'compositions')}),
 	componentRepo = createTestRepo({files:join(exampleScopeDir, 'example-component')}),
 	baseDir = join(__dirname, 'test-repos', 'a-scope'),
@@ -19,7 +19,7 @@ const build = require('../../js/lib/build'),
 	},
 	{rejects, doesNotReject} = require('assert'),
 	rimraf = require('rimraf'),
-	updateBase = require('../../js/lib/gitUpdatePackage'),
+	updateBase = require('../js/lib/gitUpdatePackage'),
 	mkdir = require('util').promisify(require('fs').mkdir),
 	{spawn} = require('child_process')
 
@@ -44,7 +44,7 @@ describe('update/create packages then execute docker-compose build', () => {
 	).timeout(60000)
 	it('rejects if errors occure in optional composition builder', () =>
 		rejects(
-			build( {...minConfig, compositions:[() => Promise.reject()]}, [])
+			build( {...minConfig, compositions:[() => Promise.reject()], retryOptions:{retries:1, minTimeout:10}}, [])
 		)
 	).timeout(60000)
 	it('rejects if a node_modules exists in source folder', () =>

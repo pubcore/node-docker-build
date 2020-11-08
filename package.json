@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "nyc --reporter=text mocha --recursive",
+    "test": "nyc --reporter=text mocha",
     "coverage": "nyc report --reporter=text-lcov"
   },
   "main": "js/index.js",
@@ -31,8 +31,10 @@
     "rimraf": "^3.0.2"
   },
   "dependencies": {
+    "await-spawn": "^4.0.1",
     "debug": "^4.2.0",
-    "git-url-parse": "^11.2.0",
-    "throat": "^5.0.0"
+    "git-url-parse": "^11.4.0",
+    "pacote": "^11.1.13",
+    "promise-retry": "^2.0.1"
   }
 }

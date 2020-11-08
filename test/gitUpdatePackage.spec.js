@@ -1,5 +1,5 @@
 'use strict'
-const updatePackage = require('../../js/lib/gitUpdatePackage'),
+const updatePackage = require('../js/lib/gitUpdatePackage'),
 	rimraf = require('rimraf'),
 	{doesNotReject, rejects, equal} = require('assert'),
 	createTestRepo = require('./gitCreateTestRepo'),

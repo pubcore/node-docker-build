@@ -1,5 +1,5 @@
 'use strict'
-const dockerBuild = require('../../js/lib/dockerBuild'),
+const dockerBuild = require('../js/lib/dockerBuild'),
 	{rejects} = require('assert')
 
 describe('docker-compose wrapper for build and push', () => {

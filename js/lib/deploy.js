@@ -1,4 +1,4 @@
-const {spawn} = require('child_process'),
+const spawn = require('await-spawn'),
 	flatten = file => file.replace(/[\\/]/g, '_')
 
 //map data to shell commands ..
@@ -18,7 +18,7 @@ const ssh = ({user, host, key, shkc}) =>
 	dockerStackDeploy = ({stackName}) =>
 		`docker stack deploy --prune --with-registry-auth ${composeFiles} ${stackName}`
 
-module.exports = ({target, configs, workingDir}) => new Promise((res, rej) => {
+module.exports = async ({target, configs, workingDir}) => {
 	var command = Object.keys(configs||{}).reduce((acc, name) =>
 			acc += uploadFile({file:configs[name], ...target}) + ' && '
 				+ deployConfig({...target, name, file:configs[name]}) + ' ; '
@@ -28,7 +28,5 @@ module.exports = ({target, configs, workingDir}) => new Promise((res, rej) => {
 		cwd = workingDir
 	console.log('working dir: ' + cwd)
 	console.log(command)
-	spawn( command, {cwd, stdio:'inherit', shell:true})
-		.on('exit', code => (code===0 ? res() : rej(console.log('ERROR deploy'))))
-		.on('error', err => rej(err))
-})
+	await spawn(command, {cwd, stdio:'inherit', shell:true})
+}

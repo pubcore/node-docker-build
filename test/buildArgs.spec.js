@@ -1,5 +1,5 @@
 'use strict'
-const buildArg = require('../../js/lib/buildArgs'),
+const buildArg = require('../js/lib/buildArgs'),
 	{equal} = require('assert')
 describe('build arguments', () => {
 	it('transforms object to arguments string', () =>{

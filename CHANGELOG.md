@@ -1,3 +1,9 @@
+## 3.7.0 2020-11-08
+* add retry pattern for updatePackages
+* remove parallel processing
+* add tests
+* add flag to enable buildKit
+
 ## 3.5.0 2020-02-19
 * add option "update" (default falsy), if true "npm update" is used
 * fix: Changed master of git-dependency not beeing installed

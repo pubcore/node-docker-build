@@ -2,15 +2,14 @@
 const deploy = require('./lib/deploy'),
 	loadConfig = require('./load-config')
 
-var [,,source, filter, domain] = process.argv
-loadConfig(source, domain).then(config => {
+var [,,source,, domain] = process.argv
+;(async () => {
+	var config = await loadConfig(source, domain)
 	if(!config){
 		process.exit()
 	}
-
 	console.time('deploy')
 	console.log('BEGIN')
-	deploy(config).then(() =>
-		console.timeEnd('deploy'), err => console.log(err)
-	)
-})
+	await deploy(config)
+	console.timeEnd('deploy')
+})()

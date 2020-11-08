@@ -3,7 +3,7 @@ const buildArg = require('./buildArgs'),
 	{platform} = require('os'),
 	{basename, resolve} = require('path'),
 	dockerCompose = require('./dockerCompose'),
-	spawnCommand = require('./spawnCommand')
+	spawn = require('await-spawn')
 
 module.exports = async (config, one) => {
 	var {domain, target, buildArgs, push, workingDir, forcePull, buildKit} = config,
@@ -19,5 +19,5 @@ module.exports = async (config, one) => {
 		exe = platform() === 'win32' ? 'PowerShell.exe -NonInteractive -Command ' : '',
 		command = `${exe}${compose('build')}${pushCommand}`
 
-	await spawnCommand(command, workingDir)
+	await spawn(command, {cwd:workingDir, stdio:'inherit', shell:true})
 }
