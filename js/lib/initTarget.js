@@ -8,7 +8,7 @@ module.exports = async ({composition, workingDir}) => {
 	await spawn(`\
 [ -d ${composition}/node_modules ] && echo "ERROR node_modules must NOT exists in ${workingDir}/${composition}" && exit 1 || \
 mkdir -p ${buildTarget} && \
-cp -rf ${composition}/ ${buildTarget}/`,
+cp -rf ${composition}/* ${buildTarget}/`,
 	{cwd:workingDir, shell:true, stdio:'inherit'}
 	)
 
